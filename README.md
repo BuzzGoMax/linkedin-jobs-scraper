@@ -1,143 +1,290 @@
-[Linkedin Jobs Scraper](https://apify.com/thirdwatch/linkedin-jobs-scraper?fpr=data)
+[Linkedin Jobs Scraper](https://apify.com/kaix/linkedin-jobs-scraper?fpr=data)
 
 # LinkedIn Jobs Scraper
 
-> Hiring-intent and buying-signal data at scale: scrape public LinkedIn jobs for titles, companies, parsed salary, skills, descriptions, and apply links across 20+ countries — no LinkedIn account, no API key.
+Scrape LinkedIn job listings via the public guest API. Search by keyword, browse by company, or fetch specific job IDs. No login required, no proxy needed.
 
-## What you get
+## Why use this scraper?
 
-LinkedIn hosts 20M+ active job postings across 200+ countries — every one of them is a buying signal. A company hiring a "Salesforce Admin" is a Salesforce customer; a company posting 10 backend roles in 30 days is in growth mode and buying tooling. This scraper returns titles, companies, locations, parsed salary ranges (min/max/currency/period), skills, experience levels, job type, full descriptions, applicant counts, and direct apply links. No LinkedIn account needed, no API key.
-
-## LinkedIn Jobs API alternative for hiring intelligence
-
-LinkedIn does not publish a public Jobs API. B2B sellers and RevOps teams use this actor as the structured-data alternative for tracking hiring intent: which companies are hiring for your ICP's tech stack, which competitors are scaling specific functions, and which accounts just opened 5+ new headcount in your target segment. The `skills`, `description`, and `company_name` fields are the load-bearing ones for buying-signal pipelines — they let you match job posts to product categories (e.g. "hiring SDR" → outbound tooling buyer; "hiring Snowflake engineer" → data-stack buyer).
-
-## Map company hiring trends from job postings
-
-Filter by `companyName` to track competitor or target-account hiring velocity over time: how many roles, which functions, what locations, what experience levels. Combine with the LinkedIn Company Employees Scraper to size the team, then use this actor to size the *delta* — net new headcount as a leading indicator for funding rounds, market expansion, and buying intent. Recruiters use the same data as a sourcing-intelligence layer (where talent is flowing to/from) and investors use it as a portfolio-monitoring signal.
-
-## Output fields
-
-| Field | Description |
-| --- | --- |
-| `title` | Job title |
-| `company_name` | Hiring company |
-| `location` | Job location |
-| `salary_raw` | Salary as displayed |
-| `salary_min` | Parsed minimum salary |
-| `salary_max` | Parsed maximum salary |
-| `salary_currency` | Currency code |
-| `salary_period` | Pay period (yearly, monthly, hourly) |
-| `experience_level` | Required experience level |
-| `job_type` | Full-time, Part-time, Contract, etc. |
-| `industry` | Company industry |
-| `skills` | Required skills (Standard and Full modes) |
-| `description` | Full job description (Standard and Full modes) |
-| `applicant_count` | Number of applicants |
-| `is_easy_apply` | Whether Easy Apply is available |
-| `posted_at` | Posting date |
-| `apply_url` | LinkedIn job URL |
-
-## Example output
-
-```
-{
-    "title": "Software Engineer",
-    "company_name": "Google",
-    "location": "San Francisco, CA",
-    "salary_raw": "$150,000 - $200,000/yr",
-    "salary_min": 150000,
-    "salary_max": 200000,
-    "salary_currency": "USD",
-    "salary_period": "yearly",
-    "experience_level": "Mid-Senior level",
-    "job_type": "Full-time",
-    "industry": "Technology, Information and Internet",
-    "skills": ["Python", "Java", "AWS"],
-    "description": "We are looking for a talented Software Engineer to join...",
-    "applicant_count": "200+ applicants",
-    "is_easy_apply": true,
-    "posted_at": "2026-04-05",
-    "apply_url": "https://www.linkedin.com/jobs/view/123456/"
-}
-```
-
-## Input parameters
-
-| Parameter | Required | Description |
-| --- | --- | --- |
-| `queries` | Yes | Job search keywords (e.g., `["software engineer", "data scientist"]`). Each query runs a separate LinkedIn search. |
-| `location` | No | City or country (e.g., `"San Francisco"`, `"London"`, `"Bangalore"`, `"India"`). Leave empty for worldwide. |
-| `country` | No | Country filter: United States, United Kingdom, India, Canada, Australia, Germany, France, Netherlands, Singapore, UAE, Japan, Brazil, Ireland, Sweden, Switzerland, Spain, Italy, Israel, South Korea, Mexico. Leave empty to use the `location` field instead. |
-| `companyName` | No | Limit results to a specific company (e.g., `"Google"`, `"Netflix"`). |
-| `maxResultsPerQuery` | No | Max jobs per query. Default `5` (start small to preview cost; raise for larger runs). LinkedIn shows ~25 per page. |
-| `maxPages` | No | Number of search result pages per query. Default `1`. Each page has ~25 jobs. |
-| `scrapeMode` | No | `standard` (default — fastest, gets all fields), `full` (alternative extraction with fallback), or `fast` (search cards only, no descriptions). |
-| `datePosted` | No | Filter: Any time, Past 24 hours, Past week, Past month. |
-| `jobType` | No | Filter: Full-time, Part-time, Contract, Temporary, Internship. |
-| `experienceLevel` | No | Filter: Internship, Entry level, Associate, Mid-Senior level, Director, Executive. |
-| `proxyConfiguration` | No | Proxy settings. Leave default for best results. |
-
-## Scrape modes
-
-- **Standard (recommended)**: Fastest and most affordable. Gets all fields including descriptions, salary, and skills.
-- **Full**: Alternative extraction method with fallback. Use if Standard returns incomplete data for your queries.
-- **Fast**: Extracts data from search result cards only — title, company, location, posted date, apply URL. Best for bulk collection when descriptions aren't needed.
+- Uses LinkedIn's public guest API, no authentication or cookies needed
+- 3 input modes: keyword search, company jobs, direct job ID lookup
+- 16 fields per job from search results alone (fast, lightweight)
+- 43+ fields with detail mode: full description, employer-provided salary, featured benefits, recruiter contact
+- Fetch similar jobs per listing via LinkedIn's similar jobs API
+- All LinkedIn search filters: job type, experience level, remote/hybrid/on-site, salary range, date posted, Easy Apply
+- Structured output ready for analysis pipelines
 
 ## Use cases
 
-- **B2B sales / RevOps (buying signals)**: Filter for `skills: ["Salesforce"]` to find Salesforce customers; filter for `skills: ["Snowflake"]` to find data-stack buyers. Hiring posts are the cleanest public proxy for tech-stack adoption.
-- **ABM teams**: Track hiring velocity at your 200 named accounts — companies posting 10+ roles in 30 days are in expansion mode and primed for outreach.
-- **Competitive intelligence**: Pull every job your top 5 competitors posted last month — see which functions they're scaling, which markets they're entering, and what their salary bands signal about funding.
-- **Recruiters / talent-sourcing**: Power sourcing workflows with fresh public listings, parsed salary, and apply URLs.
-- **Investors / market analysts**: Use net hiring as a portfolio-monitoring leading indicator — growth, contraction, and pivots show up in job posts before press releases.
-- **Job aggregators**: Build global job boards with LinkedIn as the flagship feed.
-- **Salary analytics**: Benchmark parsed salary ranges across roles, levels, and geographies.
-- **Labor-market research**: Study demand by skill, industry, and geography over time.
+- Monitor job postings for specific roles, companies, or locations
+- Build salary benchmarks from employer-provided compensation data
+- Track hiring trends across industries and regions
+- Feed structured job data into AI/NLP pipelines
+- Aggregate recruiter contact info for outreach
+- Discover related roles and salary ranges from similar jobs
 
- 
+## How to use
 
-## Use cases & recipes
+### Basic search
 
-Step-by-step guides on [thirdwatch.dev/blog](https://thirdwatch.dev/blog):
+```
+{
+  "keywords": "software engineer",
+  "location": "San Francisco"
+}
+```
 
-- [Build a LinkedIn Jobs Aggregator with Apify (2026 Guide)](https://thirdwatch.dev/blog/build-linkedin-jobs-aggregator-with-apify)
-- [Filter LinkedIn Jobs by Skill and Location (2026 Guide)](https://thirdwatch.dev/blog/filter-linkedin-jobs-by-skill-and-location)
-- [Scrape LinkedIn Jobs Without Login at Scale (2026 Guide)](https://thirdwatch.dev/blog/scrape-linkedin-jobs-without-login)
-- [Track LinkedIn Hiring Velocity by Company (2026)](https://thirdwatch.dev/blog/track-linkedin-hiring-velocity-by-company)
+### Search with filters
 
- -end
+```
+{
+  "keywords": "data scientist",
+  "location": "United States",
+  "maxJobs": 100,
+  "jobType": ["full_time"],
+  "experienceLevel": ["mid_senior", "director"],
+  "workType": ["remote"],
+  "datePosted": "past_week",
+  "sortBy": "recent"
+}
+```
+
+### Browse jobs by company
+
+```
+{
+  "companyId": "30898036",
+  "maxJobs": 50
+}
+```
+
+Find company IDs from the typeahead API (`/jobs-guest/api/typeaheadHits?typeaheadType=COMPANY&query=Notion`) or from job detail pages (`companyId` field).
+
+### Fetch specific jobs by ID
+
+```
+{
+  "jobIds": ["4406118990", "4407050560", "4370317193"]
+}
+```
+
+Always fetches full details. No extra charge for detail fetching in this mode.
+
+### Fetch full job details
+
+```
+{
+  "keywords": "marketing director",
+  "location": "New York",
+  "maxJobs": 10,
+  "fetchDetails": true
+}
+```
+
+### Include similar jobs
+
+```
+{
+  "keywords": "nurse practitioner",
+  "location": "Texas",
+  "maxJobs": 5,
+  "includeSimilar": true,
+  "maxSimilarJobs": 50
+}
+```
+
+### Filter by salary and Easy Apply
+
+```
+{
+  "keywords": "nurse practitioner",
+  "location": "Texas",
+  "salary": "100000",
+  "easyApplyOnly": true,
+  "maxJobs": 50
+}
+```
+
+## Input
+
+### Search
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| **keywords** | string |  | Job search keywords. Required unless using `companyId` or `jobIds`. |
+| **location** | string |  | Job location |
+| **maxJobs** | number | 25 | Max listings to scrape (LinkedIn caps at 1000) |
+| **sortBy** | select | relevant | `relevant` or `recent` |
+
+### Alternative modes
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| **companyId** | string | LinkedIn company ID to list all jobs from that company |
+| **jobIds** | string[] | Fetch specific jobs by ID. Always fetches full details. |
+
+### Filters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| **jobType** | string[] |  | `full_time`, `part_time`, `contract`, `temporary`, `volunteer`, `internship`, `other` |
+| **experienceLevel** | string[] |  | `internship`, `entry_level`, `associate`, `mid_senior`, `director`, `executive` |
+| **workType** | string[] |  | `on_site`, `remote`, `hybrid` |
+| **datePosted** | select |  | `past_24h`, `past_week`, `past_month` |
+| **salary** | select |  | Minimum salary: `40000` through `200000` |
+| **easyApplyOnly** | boolean | false | Only Easy Apply jobs |
+
+### Output options
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| **fetchDetails** | boolean | false | Fetch full job page per listing (~300KB each) |
+
+### Similar jobs
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| **includeSimilar** | boolean | false | Fetch similar jobs per listing |
+| **maxSimilarJobs** | number | 25 | Max similar jobs per listing. 0 = unlimited (up to 1000). |
+
+## Pricing
+
+| Event | When charged | Unit |
+| --- | --- | --- |
+| **job-detail** | Each successful detail fetch in search/company mode | Per job |
+| **similar-job** | Each similar job fetched | Per similar job |
+
+Job ID mode (`jobIds`) always fetches details at no extra charge. Search-only mode (no `fetchDetails`) incurs no per-item charges.
+
+## Output
+
+### Search-only fields (16 fields, fast)
+
+```
+{
+  "jobId": "4406118990",
+  "jobSlug": "software-engineer-new-grad-at-notion-4406118990",
+  "title": "Software Engineer, New Grad",
+  "company": "Notion",
+  "companySlug": "notionhq",
+  "companyUrl": "https://www.linkedin.com/company/notionhq",
+  "companyLogoUrl": "https://media.licdn.com/dms/image/v2/D4E0BAQGwvcv_1tHZ4w/company-logo_100_100/B4EZW25gE2GgAQ-/0/1742530282185/notionhq_logo?e=2147483647&v=beta&t=h_sgZm5R2TgP9Fpbo95m2wmxnSDoEz06eupofZwpSXs",
+  "location": "San Francisco, CA",
+  "jobUrl": "https://www.linkedin.com/jobs/view/software-engineer-new-grad-at-notion-4406118990",
+  "position": 1,
+  "postedDate": "2026-04-24",
+  "postedTimeAgo": "1 week ago",
+  "isNew": false,
+  "salary": null,
+  "badge": "Actively Hiring",
+  "benefitsCount": null,
+  "scrapedAt": "2026-05-01T05:06:50.232Z"
+}
+```
+
+### Detail fields (with `fetchDetails: true` or `jobIds`)
+
+```
+{
+  "description": "About UsNotion helps you build beautiful tools for your life's work...",
+  "descriptionHtml": "<strong>About Us<br><br></strong>Notion helps you build...",
+  "experienceLevel": "Entry level",
+  "employmentType": "Full-time",
+  "jobFunction": "Engineering and Information Technology",
+  "industries": "Software Development",
+  "applicants": "Over 200 applicants",
+  "applicantsStatus": "high",
+  "companyId": "30898036",
+  "industryIds": "4",
+  "titleId": "9",
+  "ogTitle": "Notion hiring Software Engineer, New Grad in San Francisco, CA | LinkedIn",
+  "referralMultiplier": "2x",
+  "geoId": "105638634",
+  "hasDirectApply": false,
+  "compensationSalary": null,
+  "compensationProvider": null,
+  "compensationDescription": null,
+  "featuredBenefits": [],
+  "recruiter": null
+}
+```
+
+### Compensation and benefits (when available, ~20% of jobs)
+
+From a Financial Planning & Analysis Analyst listing at Jersey Mike's Subs:
+
+```
+{
+  "compensationSalary": "$102,200.00/yr - $143,100.00/yr",
+  "compensationProvider": "Jersey Mike's Subs provided pay range",
+  "compensationDescription": "This range is provided by Jersey Mike's Subs. Your actual pay will be based on your skills and experience — talk with your recruiter to learn more.",
+  "featuredBenefits": ["Medical insurance", "Vision insurance", "Dental insurance", "401(k)"],
+  "hasDirectApply": true
+}
+```
+
+### Recruiter info (when available, ~5% of jobs)
+
+From a Director, Partner Marketing listing at Pinterest:
+
+```
+{
+  "recruiter": {
+    "name": "Aisling Seaver (Keogh)",
+    "title": "Recruiting at Pinterest",
+    "profileUrl": "https://ie.linkedin.com/in/aisling-seaver-keogh-017b2253",
+    "photoUrl": "https://media.licdn.com/dms/image/v2/D4D03AQG4RJmq4TjpJg/profile-displayphoto-shrink_400_400/..."
+  }
+}
+```
+
+### Similar jobs (with `includeSimilar: true`)
+
+Fetched via LinkedIn's similar jobs API, paginated at 10 per page:
+
+```
+{
+  "similarJobs": [
+    {
+      "jobId": "4370317193",
+      "title": "Software Engineer (New Grads)",
+      "company": "Giga",
+      "companyUrl": "https://www.linkedin.com/company/gigaml",
+      "companyLogoUrl": "https://media.licdn.com/dms/image/v2/D560BAQGuz5OVE8IcRg/company-logo_100_100/...",
+      "location": "San Francisco, CA",
+      "salary": "$160,000.00 - $250,000.00",
+      "jobUrl": "https://www.linkedin.com/jobs/view/software-engineer-new-grads-at-giga-4370317193",
+      "postedDate": "2026-04-14",
+      "postedTimeAgo": "2 weeks ago",
+      "isNew": false
+    }
+  ]
+}
+```
+
+### Detail page related content (with `fetchDetails: true`)
+
+The full job page also includes these related sections (different from the similar jobs API):
+
+```
+{
+  "peopleAlsoViewed": [
+    {
+      "jobId": "4318502728",
+      "title": "Software Engineer",
+      "company": "Imprint",
+      "salary": "$140,000.00 - $180,000.00"
+    }
+  ],
+  "similarSearches": [
+    { "title": "Technology Intern jobs", "url": "https://www.linkedin.com/jobs/technology-intern-jobs", "openJobsCount": "5,338 open jobs" }
+  ],
+  "relatedSearches": [
+    { "title": "Ascent Aviation Services jobs", "url": "https://www.linkedin.com/jobs/ascent-aviation-services-jobs" }
+  ]
+}
+```
 
 ## Limitations
 
-- Salary fields are populated for roughly 40-60% of listings — LinkedIn shows salary only when the employer opts in.
-- `skills` and `description` require Standard or Full mode; Fast mode reads only the search cards.
-- Easy Apply jobs have an `apply_url` pointing back to LinkedIn; direct-apply jobs link to the employer's site.
-- No login means no personalized recommendations — only public listings.
-- **Per-query result ceiling: ~1000 jobs.** LinkedIn's public guest endpoint stops paginating around the 1000th result. To pull more, split by location, role, `job_type`, or `date_posted` and run several queries.
-- **Match precision is good, not exact.** Public guest search is broader than logged-in search — e.g. `"account manager"` may surface adjacent sales roles. Use specific titles and the `job_type` / `experience_level` filters to tighten results. Boolean operators (AND / OR / NOT) are not supported on the public endpoint.
-- Very high volumes may hit LinkedIn rate limits; split large pulls across multiple runs.
-
-## Compared to alternatives
-
-- **vs. LinkedIn's public API**: LinkedIn does not offer an open job-search API for third parties. This actor is the structured-data alternative.
-- **vs. hiring-intent platforms (LinkedIn Talent Insights, Lightcast, Revelio)**: Those tools cost $20K–$100K/year for enterprise seats. This actor returns the underlying job-post data — title, company, skills, salary, posted_at — at a flat per-result rate, so you can build the same hiring-intent signals in-house.
-- **vs. curious_coder/linkedin-jobs-scraper** ($0.001/result, 45K users): Cheaper per result with a much larger installed base, but returns fewer fields and does not parse salary. Use this actor when you need structured salary, skills, and descriptions with a free trial.
-- **vs. bebity/linkedin-jobs-scraper** (~$0.005/result): Comparable fields, but no tiered volume discounts.
-
-Pairs well with [Indeed Scraper](https://apify.com/thirdwatch/indeed-jobs-scraper) and [Naukri Scraper](https://apify.com/thirdwatch/naukri-jobs-scraper) for multi-source hiring datasets.
-
-## FAQ
-
-**Do I need a LinkedIn account?**
-No. The scraper accesses only publicly visible job listing pages.
-
-**Why are some fields empty in Fast mode?**
-Fast mode reads only the search cards. Salary, skills, and description require Standard or Full mode.
-
-**What if I get blocked?**
-The actor has built-in rate limiting. If you see failures, lower `maxPages`, shrink queries, or spread runs across the day.
-
-Last verified: 2026-05
-
-More scrapers at [thirdwatch.dev](https://thirdwatch.dev).
+- LinkedIn caps search results at 1000 per query. Use narrower filters to access more listings.
