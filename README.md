@@ -1,279 +1,268 @@
-[Linkedin Jobs Scraper](https://apify.com/herus13/linkedin-jobs-scraper?fpr=data)
+[Linkedin Jobs Scraper](https://apify.com/parseforge/linkedin-jobs-scraper?fpr=data)
 
-Extract job listings, salary data, and company details from LinkedIn — no login required. Get **30 data fields per job**, including full company enrichment. The most complete LinkedIn jobs dataset available on Apify Store.
+![ParseForge Banner](https://images.apifyusercontent.com/wTxwbnRh8X878EoDysptDr1AzClsoPHSsuMaYGmWENw/w:1800/cb:1/aHR0cHM6Ly9naXRodWIuY29tL1BhcnNlRm9yZ2UvYXBpZnktYXNzZXRzL2Jsb2IvYWQzNWNjYzEzZGRkMDY4YjlkNmNiYTMzZjMyMzk2MmUzOWFlZDViMi9iYW5uZXIuanBnP3Jhdz10cnVl.webp)
 
-## How to Scrape LinkedIn Jobs Without Login
+# 💼 LinkedIn Jobs Scraper
 
-- **30 data fields** — more than any other LinkedIn jobs scraper
-- **No LinkedIn account needed** — uses LinkedIn's public guest API
-- **Company enrichment included** — website, employee count, industry, type, HQ via JSON-LD + HTML parsing
-- **Salary parsing** — extracts from both search cards and detail page compensation section
-- **Unlimited results** — auto-splits searches across date, job type, experience level, and workplace dimensions to bypass the 1,000-result cap
-- **Anti-blocking built in** — retry with exponential backoff, proxy rotation, rate limiting with jitter
-- **Sort by date or relevance** — get the latest 10 jobs or the most relevant 500
+> 🚀 **Collect job listings from LinkedIn in minutes.** Search by keyword, location, job type, experience level, and salary. Export titles, companies, parsed salary ranges, extracted skills, and full descriptions. No coding, no LinkedIn login.
 
-## Quick Start: How to Scrape LinkedIn Job Listings in 3 Steps
+> 🕒 **Last updated:** 2026-04-16 · **📊 30+ fields** per job · **💰 Parsed salary ranges** · **🛠️ Skill extraction** · **🚫 No login** required
 
-**Step 1 — Configure your search**
+The **LinkedIn Jobs Scraper** collects job listing data from LinkedIn, returning **30+ fields per job**: title, company, location, parsed salary (min/max with currency), extracted skills, experience level, workplace type, applicant count, posting date, full description, and Easy Apply flag. Runs support up to 1,000,000 listings on a paid plan.
 
-```
-{
-  "search_queries": ["python developer"],
-  "location": "United States",
-  "sort_by": "date",
-  "max_results": 10,
-  "enrich_company": true,
-  "proxy": {"provider": "apify", "group": "RESIDENTIAL"}
-}
-```
+The Actor supports keyword search with 10+ filters: location, date posted, job type (full-time, part-time, contract, internship), experience level, workplace type (remote, hybrid, on-site), salary minimum, Easy Apply toggle, and sort order. Optional detail-page fetching adds full descriptions, parsed skills, and company info.
 
-**Step 2 — Run the actor**
-
-Click **Start** in the Apify Console or trigger via API. The actor uses LinkedIn's guest API — no browser, no login, pure HTTP extraction.
-
-**Step 3 — Export your data**
-
-Download as CSV, JSON, or Excel. Or connect directly to your pipeline via the Apify API or webhook.
-
-> **Proxy recommended.** LinkedIn blocks datacenter IPs. Use Apify residential proxy or your own for reliable results.
-
-## Use Cases
-
-- **Build recruiting pipelines** — HR teams automate sourcing by pulling fresh job postings into ATS systems, matching candidates to new roles as they appear
-- **Track competitor hiring patterns** — Competitive intelligence: see which roles your competitors are hiring for, which locations they're expanding into, and when headcount spikes
-- **Feed job aggregator platforms** — Job boards pull structured listings from LinkedIn at scale, normalized and deduplicated, without building their own crawler
-- **Benchmark salaries by role and location** — Compensation research: collect salary_min/max across hundreds of job titles and cities to build real-time compensation benchmarks
-- **Identify growing companies (sales intelligence)** — Hiring = growing. Find companies posting 10+ jobs this month — prime prospects for sales outreach, especially in target verticals
-- **Monitor job market trends** — Market research: track weekly job volume by role, industry, and location to spot emerging skills demand and labor market shifts
-
-## What Data Can You Extract? (30 Fields)
-
-### Core Job Fields
-
-| Field | Description |
+| 🎯 Target Audience | 💡 Primary Use Cases |
 | --- | --- |
-| `job_id` | Unique LinkedIn job ID |
-| `url` | Direct link to the job listing |
-| `title` | Job title |
-| `location` | City, state, country |
-| `workplace_type` | On-site / Remote / Hybrid |
-| `employment_type` | Full-time, Part-time, Contract, etc. |
-| `seniority_level` | Entry, Associate, Mid-Senior, Director, Executive |
-| `job_function` | Engineering, Sales, Marketing, etc. |
-| `industries` | Industry tags from the listing |
-| `posted_at` | ISO 8601 posting date |
-| `applicants_count` | Number of applicants shown |
-| `apply_url` | Direct application URL |
-| `easy_apply` | True if LinkedIn Easy Apply enabled |
-| `description_text` | Full job description (plain text) |
-| `description_html` | Full job description (HTML) |
+| Recruiters, HR teams, job aggregators, workforce analysts, salary benchmarking firms, competitive intelligence teams | Job market research, salary benchmarking, recruitment intelligence, skill-demand tracking, competitor hiring analysis |
 
-### Salary Fields
+---
 
-| Field | Description |
-| --- | --- |
-| `salary_min` | Minimum salary (parsed from listing) |
-| `salary_max` | Maximum salary (parsed from listing) |
-| `salary_currency` | Currency code (USD, EUR, GBP, etc.) |
-| `salary_period` | Per year / month / hour |
+## 📋 What the LinkedIn Jobs Scraper does
 
-### Company Enrichment Fields (with `enrich_company: true`)
+Keyword search with 10+ filters:
 
-| Field | Description |
-| --- | --- |
-| `company_name` | Company name |
-| `company_url` | LinkedIn company page URL |
-| `company_website` | External company website |
-| `company_size` | Employee count range (e.g. "51-200") |
-| `company_industry` | Primary industry |
-| `company_type` | Public / Private / Non-profit / etc. |
-| `company_headquarters` | HQ location |
-| `company_logo_url` | Company logo image URL |
+- 🔍 **Keyword search.** Job title, skills, or company name.
+- 📍 **Location filter.** City, state, country, or "Remote".
+- 📅 **Date posted filter.** Past 24 hours, week, or month.
+- 🏷️ **Job type filter.** Full-time, part-time, contract, temporary, internship, volunteer.
+- 📊 **Experience level filter.** Entry, associate, mid-senior, director, executive.
+- 🏠 **Workplace type filter.** On-site, remote, hybrid.
+- 💰 **Salary filter.** Minimum salary threshold in USD.
+- ✅ **Easy Apply toggle.** Return only LinkedIn Easy Apply jobs.
+- 📝 **Detail fetching.** Optional full descriptions with parsed skills and company data.
 
-### Job Poster Fields
+Each job record includes title, company, location, parsed salary range (min, max, currency, period), extracted skills array, experience level, workplace type, applicant count, posting date, job URL, Easy Apply flag, and (when details enabled) full description and company details.
 
-| Field | Description |
-| --- | --- |
-| `poster_name` | Name of person who posted the job |
-| `poster_title` | Their job title |
-| `poster_profile_url` | Their LinkedIn profile URL |
+> 💡 **Why it matters:** manually browsing LinkedIn for job market intelligence means scrolling through pages and copying data by hand. This Actor exports structured job data at scale, with parsed salary ranges and extracted skills ready for your dashboards, salary benchmarks, or ATS integrations.
 
-> **Note:** Poster fields are available on some job listings but not all. LinkedIn's public guest API has limited poster data compared to authenticated access. These fields are populated when available at no extra cost.
+---
 
-### Metadata
+## 🎬 Full Demo
 
-| Field | Description |
-| --- | --- |
-| `scraped_at` | ISO 8601 timestamp of extraction |
+*🚧 Coming soon: a 3-minute walkthrough showing how to go from sign-up to a downloaded dataset.*
 
-## Unlimited Results — Extract LinkedIn Jobs API Alternative with No Rate Limits
+---
 
-LinkedIn caps search results at 1,000 per query. This actor bypasses the cap automatically using **multi-dimensional splitting**: when a search hits the limit, it re-runs the same query split across sub-dimensions until all jobs are collected.
+## ⚙️ Input
 
-Splitting dimensions (applied in order):
-
-1. **Date posted** — last 24h / last week / last month
-2. **Job type** — full-time / part-time / contract / temporary
-3. **Experience level** — internship / entry / associate / mid-senior / director
-4. **Workplace type** — on-site / remote / hybrid
-5. **Location sub-regions** — when a metro area has too many results
-
-Enable with `auto_split: true` (default). No extra config needed.
-
-## Company Enrichment — Extract LinkedIn Job Listings with Company Data
-
-With `enrich_company: true` (default), the actor fetches the company's LinkedIn page for every job and adds:
-
-- **Website** — the company's external URL, ready for outreach
-- **Size** — employee count band (1-10, 11-50, 51-200, 201-500, 501-1000, 1001-5000, 5001-10000, 10001+)
-- **Industry** — primary industry classification
-- **Type** — Public Company, Privately Held, Non-profit, Government Agency, etc.
-- **Headquarters** — city and country of HQ
-
-Company data is cached per run — each company page is only fetched once even if multiple jobs belong to the same company.
-
-## Sample Output — Real LinkedIn Job Data with Company Enrichment
-
-This is real output from scraping job ID `4381014743`:
-
-```
-{
-  "job_id": "4381014743",
-  "url": "https://www.linkedin.com/jobs/view/senior-python-developer-at-hackajob-4381014743",
-  "title": "Senior Python Developer",
-  "company_name": "hackajob",
-  "company_url": "https://uk.linkedin.com/company/hackajob",
-  "company_website": "https://www.hackajob.com",
-  "company_size": "51-200 employees",
-  "company_industry": "Software Development",
-  "company_type": "Privately Held",
-  "company_headquarters": "London",
-  "company_logo_url": "https://media.licdn.com/dms/image/v2/D4D0BAQG3u9MOOWLo4w/company-logo_100_100/...",
-  "location": "Boston, MA",
-  "workplace_type": null,
-  "employment_type": "Full-time",
-  "seniority_level": "Not Applicable",
-  "job_function": "Engineering and Information Technology",
-  "industries": "Software Development",
-  "salary_min": 135000.0,
-  "salary_max": 155000.0,
-  "salary_currency": "USD",
-  "salary_period": "yearly",
-  "description_text": "hackajob is collaborating with Verisk to connect them with exceptional professionals...",
-  "description_html": "<div class=\"show-more-less-html__markup\">...</div>",
-  "poster_name": null,
-  "poster_title": null,
-  "poster_profile_url": null,
-  "posted_at": "2026-03-29T00:00:00+00:00",
-  "applicants_count": 25,
-  "apply_url": null,
-  "easy_apply": false,
-  "scraped_at": "2026-03-29T16:58:44.919665Z"
-}
-```
-
-> **Note on null fields:** `workplace_type` is null when the employer doesn't specify remote/hybrid/on-site. `poster_*` fields are not available on LinkedIn's public guest API (would require authenticated access). `apply_url` is null when the job uses LinkedIn's sign-in-to-apply flow rather than an external link.
-
-## How Much Does It Cost to Scrape LinkedIn Jobs?
-
-**$0.0005 per result** + $0.01 per run. Company enrichment and salary data included at no extra charge.
-
-| Results | Cost | vs Curious Coder | vs valig |
+| Input | Type | Default | Behavior |
 | --- | --- | --- | --- |
-| 100 | $0.06 | $0.10 (67% more) | $0.03 (fewer fields) |
-| 1,000 | $0.51 | $1.00 (2x more) | $0.32 (fewer fields) |
-| 10,000 | $5.01 | $10.00 (2x more) | $3.20 (fewer fields) |
+| `searchQuery` | string | `""` | Job title, keywords, or company name. |
+| `location` | string | `""` | City, state, country, or "Remote". |
+| `maxItems` | integer | `10` | Max jobs. Free: up to 10. Paid: up to 1,000,000. |
+| `datePosted` | string | `""` | Past 24 hours, week, or month. |
+| `jobType` | array | `[]` | Full-time, part-time, contract, temporary, internship. |
+| `experienceLevel` | array | `[]` | Entry, associate, mid-senior, director, executive. |
+| `workplaceType` | array | `[]` | On-site, remote, hybrid. |
+| `salary` | string | `""` | Minimum salary in USD. |
+| `easyApplyOnly` | boolean | `false` | Only LinkedIn Easy Apply jobs. |
+| `scrapeJobDetails` | boolean | `false` | Fetch full descriptions, skills, and company data. |
+| `extractSkills` | boolean | `false` | Parse skills from descriptions. |
 
-### Competitor Comparison
+**Example: remote software engineer jobs posted this week, $100K+.**
 
-| Actor | 1K jobs | Fields | Company Data | Salary | Poster Profile |
-| --- | --- | --- | --- | --- | --- |
-| **Ours** | **$0.50** | **30** | **Yes (7 fields)** | **Yes** | **Yes** |
-| Curious Coder | $1.00 | ~25 | Basic | Partial | No |
-| valig | $0.32 | ~13 | No | No | No |
-| Bebity | ~$0.20 | ~15 | No | No | No |
+```
+{
+    "searchQuery": "software engineer",
+    "location": "Remote",
+    "datePosted": "past-week",
+    "workplaceType": ["remote"],
+    "salary": "100000",
+    "scrapeJobDetails": true,
+    "extractSkills": true,
+    "maxItems": 50
+}
+```
 
-We charge more than valig/Bebity because we deliver more: full company enrichment, salary parsing, and poster profiles are included. We charge half of Curious Coder for more fields.
+**Example: entry-level data analyst jobs in New York.**
 
-## Input Parameters
+```
+{
+    "searchQuery": "data analyst",
+    "location": "New York, NY",
+    "experienceLevel": ["entry"],
+    "maxItems": 100
+}
+```
 
-| Parameter | Default | Description |
+> ⚠️ **Good to Know:** residential proxies are recommended for large runs. LinkedIn rate-limits datacenter IPs aggressively. The proxy configuration is pre-filled with recommended settings. Enabling `scrapeJobDetails` is slower (1-2s per job) but returns much richer data.
+
+---
+
+## 📊 Output
+
+Each job record contains **30+ fields** (with details enabled). Download the dataset as CSV, Excel, JSON, or XML.
+
+### 🧾 Schema
+
+| Field | Type | Example |
 | --- | --- | --- |
-| `search_queries` | `[]` | Job title keywords (e.g. `"python developer"`) |
-| `search_urls` | `[]` | Pre-built LinkedIn job search URLs |
-| `location` | null | Location filter (e.g. `"New York"`, `"Remote"`, `"United States"`) |
-| `job_type` | null | full-time, part-time, contract, temporary, volunteer |
-| `experience_level` | null | internship, entry, associate, mid-senior, director |
-| `workplace_type` | null | on-site, remote, hybrid |
-| `date_posted` | null | 24h, week, month |
-| `salary_range` | null | Min salary: 40k+, 60k+, 80k+, 100k+, 120k+ |
-| `sort_by` | relevance | Sort results: `relevance` or `date` (most recent first) |
-| `enrich_company` | true | Fetch company details (website, size, industry, type, HQ) |
-| `enrich_poster` | true | Fetch job poster profile info |
-| `auto_split` | true | Auto-split to bypass 1,000-result cap |
-| `max_results` | 500 | Max job results to return |
-| `max_concurrency` | 10 | Parallel requests |
-| `max_requests_per_minute` | 60 | Rate limit (lower = safer) |
-| `geo_id` | null | Advanced: LinkedIn geo ID for precise location (overrides `location`) |
-| `proxy` | null | Proxy config — **recommended for any production use** |
+| 📝 `title` | string | `"Senior Software Engineer"` |
+| 🏢 `company` | string | `"Google"` |
+| 📍 `location` | string | `"Mountain View, CA"` |
+| 💰 `salary` | string | `"$150,000 - $200,000/yr"` |
+| 💵 `salaryMin` | number | null | `150000` |
+| 💵 `salaryMax` | number | null | `200000` |
+| 💱 `salaryCurrency` | string | null | `"USD"` |
+| 📊 `salaryPeriod` | string | null | `"yearly"` |
+| 🏷️ `jobType` | string | `"Full-time"` |
+| 📊 `experienceLevel` | string | `"Mid-Senior level"` |
+| 🏠 `workplaceType` | string | `"Remote"` |
+| 👥 `applicantCount` | string | `"200+ applicants"` |
+| 📅 `postedDate` | string | `"2 days ago"` |
+| ✅ `easyApply` | boolean | `true` |
+| 🛠️ `skills` | array | `["Python", "AWS", "Kubernetes"]` |
+| 📝 `description` | string | null | `"We are looking for..."` |
+| 🔗 `jobUrl` | string | `"https://www.linkedin.com/jobs/view/..."` |
+| 🏢 `companyUrl` | string | null | `"https://www.linkedin.com/company/google"` |
+| 🕒 `scrapedAt` | ISO 8601 | `"2026-04-16T00:00:00.000Z"` |
 
-## Proxy Configuration
+### 📦 Sample records
 
-**Residential proxy is recommended for all runs.** LinkedIn blocks requests from datacenter IPs. The simplest option is Apify's built-in residential proxy.
+ 
+ 
+ 
 
-```
-// Apify managed proxy
-{"provider": "apify", "group": "RESIDENTIAL"}
+---
 
-// Bright Data
-{"provider": "brightdata", "username": "YOUR_USER", "password": "YOUR_PASS", "zone": "residential", "country": "US"}
+## ✨ Why choose this Actor
 
-// Oxylabs
-{"provider": "oxylabs", "username": "YOUR_USER", "password": "YOUR_PASS", "proxy_type": "residential", "country": "US"}
-
-// SmartProxy
-{"provider": "smartproxy", "username": "YOUR_USER", "password": "YOUR_PASS", "proxy_type": "residential", "country": "US"}
-
-// Any proxy URL
-{"provider": "raw_urls", "urls": ["http://user:pass@proxy.example.com:8080"]}
-```
-
-## Error Handling
-
-| Situation | What happens |
+|  | Capability |
 | --- | --- |
-| **No proxy configured** | LinkedIn blocks datacenter IPs. You'll see "LinkedIn BLOCKED the request. Configure a proxy." Add a residential proxy. |
-| Rate limited (HTTP 429) | Retries up to 3 times with exponential backoff (2s, 4s, 8s) + random jitter |
-| Search pagination blocked | Waits 5-10s, retries once, then stops with partial results |
-| Company page blocked | Job still returned, company fields populated from JSON-LD when available |
-| 0 results for a search | Returns empty dataset, no charge |
-| Salary not listed | Checks both search card and detail page compensation section. Null only if employer didn't include it. |
-| Proxy rotation | When multiple proxy URLs provided, rotates round-robin per request |
+| 💰 | **Parsed salary ranges.** Min, max, currency, and period extracted from salary strings. |
+| 🛠️ | **Skill extraction.** Technical and soft skills parsed from job descriptions. |
+| 🔍 | **10+ search filters.** Keyword, location, date, type, experience, workplace, salary, Easy Apply. |
+| 📊 | **30+ fields per job.** Title, company, salary, skills, applicants, and full description. |
+| 📝 | **Optional detail fetching.** Full descriptions, company data, and parsed skills. |
+| ⚡ | **Scalable.** From quick 10-job samples to full market sweeps. |
+| 🚫 | **No login.** No LinkedIn account or API key needed. |
 
-Individual failures never crash the run — you always get partial results.
+> 📊 LinkedIn lists millions of active job openings worldwide. Structured access to this data, with parsed salary ranges and extracted skills, powers every recruitment, benchmarking, and workforce-intelligence workflow.
 
-## Frequently Asked Questions
+---
 
-**Do I need a LinkedIn account to use this scraper?**
-No. The actor uses LinkedIn's public guest API endpoints — no login, no cookies, no account required. It extracts only publicly visible data.
+## 📈 How it compares to alternatives
 
-**Do I need a proxy?**
-Yes, for reliable results. LinkedIn blocks requests from datacenter IPs (like Apify's servers). Use `{"provider": "apify", "group": "RESIDENTIAL"}` or your own residential proxy. Without proxy, you may see "LinkedIn BLOCKED the request" errors.
+| Approach | Cost | Coverage | Refresh | Salary parsing | Setup |
+| --- | --- | --- | --- | --- | --- |
+| **⭐ LinkedIn Jobs Scraper** *(this Actor)* | $5 free credit, then pay-per-use | Any LinkedIn search | **Live per run** | Yes (min/max/currency) | ⚡ 2 min |
+| LinkedIn Recruiter | $8,000+/year | Full platform | Real-time | No parsing | 🐢 Weeks |
+| Paid job intelligence platforms | $200-1,000/month | Multi-board | Varies | Some | ⏳ Days |
+| Manual LinkedIn browsing | Free | Manual | Manual | No | 🕒 Hours per search |
 
-**How many jobs can I scrape?**
-Unlimited. LinkedIn caps individual searches at ~1,000 results, but this actor auto-splits searches across multiple dimensions (date, job type, experience level, workplace) to collect all available listings. Set `auto_split: true` (default).
+Pick this Actor when you want LinkedIn job data with parsed salaries and extracted skills, without a Recruiter license.
 
-**Is company enrichment included in the price?**
-Yes. Company data (website, size, industry, type, HQ) is fetched at no extra charge. The $0.50/1K price covers everything.
+---
 
-**How fresh is the data?**
-The actor scrapes LinkedIn live at run time. Use `date_posted: "24h"` to get only jobs posted in the last 24 hours for maximum freshness.
+## 🚀 How to use
 
-**Can I search by multiple keywords?**
-Yes. Pass multiple values in `search_queries`: `["python developer", "django engineer", "backend python"]`. Each query runs independently and results are deduplicated by `job_id`.
+1. 📝 **Sign up.** [Create a free account with $5 credit](https://console.apify.com/sign-up?fpr=vmoqkp) (takes 2 minutes).
+2. 🌐 **Open the Actor.** Go to the LinkedIn Jobs Scraper page on the Apify Store.
+3. 🎯 **Set input.** Enter a search query and location. Set job type, experience level, and `maxItems`.
+4. 🚀 **Run it.** Click **Start** and let the Actor collect your data.
+5. 📥 **Download.** Grab your results in the **Dataset** tab as CSV, Excel, JSON, or XML.
 
-**How do I get jobs for a specific location?**
-Use the `location` field (e.g. `"San Francisco"`, `"London"`, `"Remote"`). For precise targeting, use `geo_id` with LinkedIn's internal geo ID for a city or region.
+> ⏱️ Total time from signup to downloaded dataset: **3-5 minutes.** No coding required.
 
-**Why are some salary fields empty?**
-LinkedIn only shows salary when the employer chooses to include it. Roughly 40-60% of US job postings include salary. Non-US postings have lower coverage. The actor parses all salary formats (annual, hourly, monthly) when present.
+---
+
+## 💼 Business use cases
+
+| ### 🏢 Recruiters & Staffing Agencies     - Monitor competitor hiring in real time - Track which skills employers demand most - Build candidate-sourcing intelligence - Benchmark offer packages by market | ### 📊 HR & Workforce Planning     - Benchmark salaries against LinkedIn market data - Analyze job posting volume by location and role - Track skill-demand trends over time - Build workforce supply-demand models |
+| --- | --- |
+| ### 💻 Job Aggregators & Career Platforms     - Feed job boards with fresh LinkedIn listings - Enrich recommendations with salary and skill data - Build salary comparison tools - Power job-alert features | ### 🎓 Job Seekers & Career Advisors     - Research salary ranges before negotiations - Track new postings matching your profile daily - Compare skill requirements across similar roles - Identify high-demand skills in your field |
+
+---
+
+---
+
+## 🌟 Beyond business use cases
+
+Data like this powers more than commercial workflows. The same structured records support research, education, civic projects, and personal initiatives.
+
+| ### 🎓 Research and academia     - Empirical datasets for papers, thesis work, and coursework - Longitudinal studies tracking changes across snapshots - Reproducible research with cited, versioned data pulls - Classroom exercises on data analysis and ethical scraping | ### 🎨 Personal and creative     - Side projects, portfolio demos, and indie app launches - Data visualizations, dashboards, and infographics - Content research for bloggers, YouTubers, and podcasters - Hobbyist collections and personal trackers |
+| --- | --- |
+| ### 🤝 Non-profit and civic     - Transparency reporting and accountability projects - Advocacy campaigns backed by public-interest data - Community-run databases for local issues - Investigative journalism on public records | ### 🧪 Experimentation     - Prototype AI and machine-learning pipelines with real data - Validate product-market hypotheses before engineering spend - Train small domain-specific models on niche corpora - Test dashboard concepts with live input |
+
+## 🤖 Ask an AI assistant about this scraper
+
+Open a ready-to-send prompt about this ParseForge actor in the AI of your choice:
+
+- 💬 [**ChatGPT**](https://chat.openai.com/?q=How%20do%20I%20use%20the%20%F0%9F%92%BC%20LinkedIn%20Jobs%20Scraper%20%F0%9F%94%93%20No%20Cookie%2FLogin%20Needed%20%F0%9F%93%84%20%2BRaw%20HTML%20by%20ParseForge%20on%20Apify%3F%20Show%20me%20input%20examples%2C%20output%20fields%2C%20common%20use%20cases%2C%20and%20how%20to%20integrate%20it%20into%20a%20workflow.)
+- 🧠 [**Claude**](https://claude.ai/new?q=How%20do%20I%20use%20the%20%F0%9F%92%BC%20LinkedIn%20Jobs%20Scraper%20%F0%9F%94%93%20No%20Cookie%2FLogin%20Needed%20%F0%9F%93%84%20%2BRaw%20HTML%20by%20ParseForge%20on%20Apify%3F%20Show%20me%20input%20examples%2C%20output%20fields%2C%20common%20use%20cases%2C%20and%20how%20to%20integrate%20it%20into%20a%20workflow.)
+- 🔍 [**Perplexity**](https://perplexity.ai/search?q=How%20do%20I%20use%20the%20%F0%9F%92%BC%20LinkedIn%20Jobs%20Scraper%20%F0%9F%94%93%20No%20Cookie%2FLogin%20Needed%20%F0%9F%93%84%20%2BRaw%20HTML%20by%20ParseForge%20on%20Apify%3F%20Show%20me%20input%20examples%2C%20output%20fields%2C%20common%20use%20cases%2C%20and%20how%20to%20integrate%20it%20into%20a%20workflow.)
+- 🅒 [**Copilot**](https://copilot.microsoft.com/?q=How%20do%20I%20use%20the%20%F0%9F%92%BC%20LinkedIn%20Jobs%20Scraper%20%F0%9F%94%93%20No%20Cookie%2FLogin%20Needed%20%F0%9F%93%84%20%2BRaw%20HTML%20by%20ParseForge%20on%20Apify%3F%20Show%20me%20input%20examples%2C%20output%20fields%2C%20common%20use%20cases%2C%20and%20how%20to%20integrate%20it%20into%20a%20workflow.)
+
+## ❓ Frequently Asked Questions
+
+### 💳 Do I need a paid Apify plan to run this actor?
+
+No. You can start right now on the free Apify plan, which includes **$5 in free monthly credit**. That is enough to run this actor several times and explore the output before committing to anything. Paid plans unlock higher limits, more concurrent runs, and larger datasets. [Create a free Apify account here](https://console.apify.com/sign-up?fpr=vmoqkp) to get started.
+
+### 🚨 What happens if my run fails or returns no results?
+
+Failed runs are not charged. If the source site changes, proxies get rate-limited, or a specific input matches nothing, re-run the actor or open our [contact form](https://tally.so/r/BzdKgA) and we will investigate. You can also check the run log in the Apify console to see why the run stopped.
+
+### 📏 How many items can I scrape per run?
+
+Free users are limited to **10 items per run** so you can preview the output and confirm the actor works for your use case. Paid users can raise `maxItems` up to **1,000,000** per run. [Upgrade here](https://console.apify.com/sign-up?fpr=vmoqkp) if you need full scale.
+
+### 🕒 How fresh is the data?
+
+Every run fetches live data at the moment of execution. There is no cache or delay: the records you get reflect what the source returned at that moment. Schedule the actor to maintain a rolling snapshot of the data you need.
+
+### 🧑‍💻 Can I call this actor from my own code?
+
+Yes. Apify exposes every actor as a REST endpoint and ships first-class SDKs for [Node.js](https://docs.apify.com/sdk/js) and [Python](https://docs.apify.com/sdk/python). You can start a run, read the dataset, and handle webhooks from your own app in a few lines. All you need is your Apify API token.
+
+### 📤 How do I export the data?
+
+Every Apify dataset can be downloaded in one click from the console as CSV, JSON, JSONL, Excel, HTML, XML, or RSS. You can also pull results programmatically via the [Apify API](https://docs.apify.com/api/v2) or stream them into BigQuery, S3, and other destinations through built-in integrations.
+
+### 📅 Can I schedule the actor to run automatically?
+
+Yes. Use the Apify scheduler to run the actor on any cadence, from hourly to monthly. Results are saved to your dataset and can be delivered to webhooks, email, Slack, cloud storage, or automation tools such as Zapier and Make.
+
+---
+
+## 🔌 Automating LinkedIn Jobs Scraper
+
+Control the scraper programmatically for scheduled runs and pipeline integrations:
+
+- 🟢 **Node.js.** Install the `apify-client` NPM package.
+- 🐍 **Python.** Use the `apify-client` PyPI package.
+- 📚 See the [Apify API documentation](https://docs.apify.com/api/v2) for full details.
+
+The [Apify Schedules feature](https://docs.apify.com/platform/schedules) lets you trigger this Actor on any cron interval. Daily pulls keep your recruitment intelligence fresh.
+
+## 🔌 Integrate with any app
+
+LinkedIn Jobs Scraper connects to any cloud service via [Apify integrations](https://apify.com/integrations):
+
+- [**Make**](https://docs.apify.com/platform/integrations/make) - Automate multi-step workflows
+- [**Zapier**](https://docs.apify.com/platform/integrations/zapier) - Connect with 5,000+ apps
+- [**Slack**](https://docs.apify.com/platform/integrations/slack) - Get alerts on new matching jobs
+- [**Airbyte**](https://docs.apify.com/platform/integrations/airbyte) - Pipe job data into your warehouse
+- [**GitHub**](https://docs.apify.com/platform/integrations/github) - Trigger runs from commits and releases
+- [**Google Drive**](https://docs.apify.com/platform/integrations/drive) - Export datasets straight to Sheets
+
+---
+
+## 🔗 Recommended Actors
+
+- [**🔍 SEEK Job Scraper**](https://apify.com/parseforge/seek-scraper) - Job listings from Australia's largest job board
+- [**🔐 ClearedJobs Scraper**](https://apify.com/parseforge/clearedjobs-scraper) - Security-cleared job listings
+- [**📊 Glassdoor Jobs Scraper**](https://apify.com/parseforge/glassdoor-scraper-jobs) - Jobs with salary and company data
+- [**📸 Instagram Posts Scraper**](https://apify.com/parseforge/instagram-posts-scraper) - Posts and engagement from public profiles
+- [**💼 PitchBook Investors Scraper**](https://apify.com/parseforge/pitchbook-investors-scraper) - Investor profiles with AUM and contact data
+
+> 💡 **Pro Tip:** browse the complete [ParseForge collection](https://apify.com/parseforge) for more job and recruitment scrapers.
+
+---
+
+**🆘 Need Help?** [**Open our contact form**](https://tally.so/r/BzdKgA) to request a new scraper, propose a custom data project, or report an issue.
+
+---
+
+> **⚠️ Disclaimer:** this Actor is an independent tool and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation or Microsoft. All trademarks mentioned are the property of their respective owners. Only publicly available job listing data is collected.
