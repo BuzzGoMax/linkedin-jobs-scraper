@@ -1,181 +1,278 @@
-[Linkedin Jobs Scraper](https://apify.com/mr.data_scientist/linkedin-jobs-scraper?fpr=data)
+[Linkedin Jobs Scraper](https://apify.com/vulnv/linkedin-jobs-scraper?fpr=data)
 
-# LinkedIn Jobs Scraper
+# 💼 LinkedIn Jobs Scraper ⚡ No Login Required
 
-Scrape LinkedIn job listings with powerful filtering options. Extract job titles, companies, locations, descriptions, seniority levels, employment types, and more — all without requiring a LinkedIn account.
+## Overview
 
-## Features
+The **LinkedIn Jobs Scraper** is an Apify Actor that extracts comprehensive job data from **LinkedIn Jobs** at scale. Perfect for job market analysis, recruitment research, salary benchmarking, and competitive intelligence — with **no LinkedIn login, cookies, or browser automation required**.
 
-- 🔍 **Advanced Search Filters**: Filter by location radius, date posted, experience level, and work type
-- 📊 **Comprehensive Data**: Extract full job details including description, seniority, employment type, industries
-- 🚀 **Fast & Efficient**: Optimized scraping with smart pagination handling
-- 🔒 **No Login Required**: Uses LinkedIn's public job listings
-- 📁 **Multiple Export Formats**: JSON, CSV, Excel via Apify datasets
-- ⚡ **Proxy Support**: Built-in proxy rotation for reliable scraping
+✅ No LinkedIn login required | ✅ Advanced search filters | ✅ Automated pagination | ✅ Structured JSON output | ✅ High success rate
 
-## How to Use
+---
 
- 
+### **Complete Job Data**
 
-## Input Parameters
+- **Job Information** — Title, description, job type, experience level, remote options
+- **Company Details** — Company name, size, industry, location
+- **Salary Information** — Salary ranges and compensation details (when available)
+- **Location Data** — Job location, remote/hybrid options, location radius
+- **Application Details** — Application URLs, posting date, job status
+- **Requirements** — Skills, qualifications, experience requirements
+- **Benefits** — Company benefits and perks (when available)
+- **Metadata** — Job ID, posting timestamp, extraction timestamp
 
-| Parameter | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `searchQueries` | Array | ✅ Yes | - | List of search queries with title and location |
-| `distance` | String | No | "40" | Search radius: "0", "8", "16", "40", "80", "160" km |
-| `datePosted` | String | No | "any" | Time filter: "any", "24hr", "week", "month" |
-| `experienceLevel` | Array | No | [] | Experience levels: internship, entry, associate, mid-senior, director, executive |
-| `workType` | Array | No | [] | Work types: remote, hybrid, onsite |
-| `maxJobs` | Number | No | 25 | Maximum jobs per search query (1-1000) |
-| `scrapeJobDetails` | Boolean | No | true | Fetch full job descriptions |
-| `proxy` | Object | No | No proxy | Proxy configuration (optional) |
+### **Advanced Search Filters**
 
-### Example Input
+- **Location-based** — Search by city, country, and radius
+- **Keyword Search** — Job titles, skills, company names
+- **Experience Level** — Internship to Executive positions
+- **Job Type** — Full-time, Part-time, Contract, Temporary
+- **Work Arrangement** — On-site, Remote, Hybrid
+- **Time Range** — Past 24 hours to any time
+- **Company Filter** — Target specific companies
 
-```
-{
-    "searchQueries": [
-        {
-            "title": "Software Engineer",
-            "location": "San Francisco, CA"
-        },
-        {
-            "title": "Software Developer",
-            "location": "San Francisco, CA"
-        },
-        {
-            "title": "Backend Engineer",
-            "location": "San Francisco, CA"
-        },
-        {
-            "title": "Full Stack Developer",
-            "location": "New York, NY"
-        }
-    ],
-    "distance": "40",
-    "datePosted": "week",
-    "experienceLevel": ["entry", "associate", "mid-senior"],
-    "workType": ["remote", "hybrid"],
-    "maxJobs": 50,
-    "scrapeJobDetails": true
-}
-```
+---
 
-## Output
+## 🧾 Input Configuration
 
-Each scraped job contains the following fields:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `job_title` | String | Job title |
-| `company` | String | Company name |
-| `location` | String | Job location |
-| `job_link` | String | Direct link to the job posting |
-| `posting_date` | String | When the job was posted (MM/DD/YYYY) |
-| `description` | String | Full job description (if `scrapeJobDetails` is true) |
-| `seniority_level` | String | Seniority level (e.g., "Mid-Senior level") |
-| `employment_type` | String | Employment type (e.g., "Full-time") |
-| `job_function` | String | Job function/department |
-| `industries` | String | Industry sectors |
-| `search_query` | String | The search query that found this job |
-| `search_location` | String | The location used in the search |
-| `scraped_at` | String | Timestamp of when the job was scraped |
-
-### Example Output
+The scraper uses a simple, intuitive input format for single job searches:
 
 ```
 {
-    "job_title": "Senior Software Engineer",
-    "company": "TechCorp Inc.",
-    "location": "San Francisco, CA",
-    "job_link": "https://www.linkedin.com/jobs/view/1234567890",
-    "posting_date": "01/03/2026",
-    "description": "We are looking for a Senior Software Engineer to join our team...",
-    "seniority_level": "Mid-Senior level",
-    "employment_type": "Full-time",
-    "job_function": "Engineering, Information Technology",
-    "industries": "Software Development, Technology",
-    "search_query": "Software Engineer",
-    "search_location": "San Francisco, CA",
-    "scraped_at": "2026-01-05T10:30:00.000Z"
+  "location": "New York",
+  "keyword": "python developer",
+  "country": "US",
+  "time_range": "Past month",
+  "job_type": "Full-time",
+  "experience_level": "Mid-Senior level",
+  "remote": "Remote",
+  "max_jobs": 25
 }
 ```
 
-## Filter Options
+### **Input Parameters**
 
-### Distance Radius
+| Field | Required | Description | Example |
+| --- | --- | --- | --- |
+| `location` | ✅ | Job location | "New York", "London", "Berlin" |
+| `keyword` | ❌ | Job title/keywords | "python developer", "marketing manager" |
+| `max_jobs` | ❌ | Max jobs to collect (1-100) | 25 |
+| `country` | ❌ | Country code (2 letters) | "US", "GB" (for UK), "FR", "DE", "CA" |
+| `time_range` | ❌ | Posting timeframe | "Past 24 hours", "Past week", "Past month", "Any time" |
+| `job_type` | ❌ | Employment type | "Full-time", "Part-time", "Contract", "Temporary", "Volunteer" |
+| `experience_level` | ❌ | Experience required | "Internship", "Entry level", "Associate", "Mid-Senior level", "Director", "Executive" |
+| `remote` | ❌ | Work arrangement | "On-site", "Remote", "Hybrid" |
+| `company` | ❌ | Company name | "Google", "Microsoft", "Apple" |
+| `selective_search` | ❌ | Strict keyword matching | `true`, `false` |
+| `location_radius` | ❌ | Search radius | "Exact location", "5 miles (8 km)", "25 miles (40 km)" |
 
-| Value | Description |
-| --- | --- |
-| "0" | Exact location only |
-| "8" | 8 km (5 miles) |
-| "16" | 16 km (10 miles) |
-| "40" | 40 km (25 miles) - Default |
-| "80" | 80 km (50 miles) |
-| "160" | 160 km (100 miles) |
+---
 
-### Date Posted
+## 📤 Output Format
 
-| Value | Description |
-| --- | --- |
-| "any" | Any time (no filter) |
-| "24hr" | Past 24 hours |
-| "week" | Past week |
-| "month" | Past month |
+Each job will return comprehensive structured data such as:
 
-### Experience Level
+```
+{
+  "job_posting_id": "3472834729",
+  "job_title": "Senior Python Developer",
+  "company_name": "TechCorp Inc",
+  "company_url": "https://www.linkedin.com/company/techcorp",
+  "location": "San Francisco, CA",
+  "remote_allowed": true,
+  "job_type": "Full-time",
+  "experience_level": "Mid-Senior level",
+  "posted_date": "2024-01-15T10:30:00Z",
+  "application_url": "https://www.linkedin.com/jobs/view/3472834729",
+  "job_description": "We are seeking a Senior Python Developer to join our growing engineering team...",
+  "requirements": [
+    "5+ years of Python experience",
+    "Experience with Django/Flask",
+    "Knowledge of cloud platforms (AWS/GCP)",
+    "Strong problem-solving skills"
+  ],
+  "benefits": [
+    "Competitive salary",
+    "Health insurance",
+    "Remote work options",
+    "Professional development budget"
+  ],
+  "salary_range": {
+    "min": 120000,
+    "max": 180000,
+    "currency": "USD",
+    "period": "annual"
+  },
+  "company_info": {
+    "industry": "Technology",
+    "company_size": "201-500 employees",
+    "headquarters": "San Francisco, CA"
+  },
+  "applicants_count": 47,
+  "timestamp": "2024-01-16T14:25:30.965Z"
+}
+```
 
-| Value | Description |
-| --- | --- |
-| "internship" | Internship |
-| "entry" | Entry level |
-| "associate" | Associate |
-| "mid-senior" | Mid-Senior level |
-| "director" | Director |
-| "executive" | Executive |
+---
 
-### Work Type
+## ⚙️ Smart Pagination
 
-| Value | Description |
-| --- | --- |
-| "remote" | Remote work |
-| "hybrid" | Hybrid (office + remote) |
-| "onsite" | On-site only |
+When you request more than 5 jobs (`max_jobs > 5`), the scraper automatically handles pagination:
 
-## Usage Tips
+- **Splits requests** into multiple API calls (max 5 jobs per call)
+- **Prevents duplicates** using job ID tracking
+- **Continues until target** is reached or no more jobs available
 
-1. **Use Multiple Job Titles**: Search for the same role using different title variations (e.g., "Software Engineer", "Software Developer", "SWE") to maximize results
-2. **Start Small**: Begin with a lower `maxJobs` value (25-50) to test your filters
-3. **Add Delays**: Increase `requestDelayMs` if you experience rate limiting
-4. **Combine Filters**: Use multiple experience levels and work types for broader searches
-5. **Specific Locations**: Use city + state/country format for better location matching
+**Example:** `max_jobs: 15` results in 3 API calls collecting 5 jobs each.
 
-## Rate Limiting & Best Practices
+---
 
-- The actor includes built-in delays between requests to avoid rate limiting
-- Consider running during off-peak hours for better performance
-- Split large searches into multiple smaller runs
+## ✅ Usage Examples
 
-## Integrations
+### Basic Job Search
 
-Export your data to:
+```
+{
+  "location": "Chicago",
+  "keyword": "marketing manager",
+  "max_jobs": 10
+}
+```
 
-- **Google Sheets**: Via Apify integrations
-- **Webhooks**: Send data to your API endpoints
-- **Email**: Get notified when new jobs are found
-- **Zapier/Make/n8n**: Connect to 1000+ apps
+### Advanced Filtered Search
 
-## Changelog
+```
+{
+  "location": "Remote",
+  "keyword": "frontend developer",
+  "time_range": "Past week",
+  "job_type": "Contract",
+  "remote": "Remote",
+  "experience_level": "Mid-Senior level",
+  "selective_search": true,
+  "max_jobs": 30
+}
+```
 
-- Full filtering support (distance, date, experience, work type)
-- Job detail scraping
-- Pagination support
-- Proxy integration
+### Company-Specific Search
 
-## Support
+```
+{
+  "location": "Seattle",
+  "company": "Amazon",
+  "country": "US",
+  "job_type": "Full-time",
+  "location_radius": "25 miles (40 km)",
+  "max_jobs": 50
+}
+```
 
-If you have any issues or feature requests:
+### International Search
 
-- Open an issue on GitHub
-- Contact support through Apify
-- OR email me: [mrali.hassan997@gmail.com](mailto:mrali.hassan997@gmail.com)
+```
+{
+  "location": "Berlin",
+  "keyword": "data scientist",
+  "country": "DE",
+  "remote": "Hybrid",
+  "experience_level": "Entry level",
+  "max_jobs": 20
+}
+```
+
+---
+
+## 📊 Output & Export
+
+### **Dataset Storage**
+
+- All extracted job data is stored in your Apify dataset
+- Each job becomes one dataset item
+- Failed extractions are logged with error details
+
+### **Export Formats**
+
+- **JSON** — Raw structured data for API integration
+- **CSV** — Spreadsheet-compatible format for analysis
+- **Excel** — Formatted spreadsheet for reporting
+
+---
+
+## 💼 Common Use Cases
+
+### **Recruitment & Talent Acquisition**
+
+- Source candidates by analyzing job requirements and qualifications
+- Track competitor hiring patterns and salary benchmarks
+- Identify in-demand skills and experience levels in specific markets
+
+### **Market Research & Analysis**
+
+- Analyze job market trends by location, industry, and role
+- Monitor salary ranges and compensation trends over time
+- Research company hiring activity and growth patterns
+
+### **Career Planning & Development**
+
+- Discover skill requirements for target positions
+- Compare salaries across different companies and locations
+- Track job availability and market demand in specific fields
+
+### **Business Intelligence & Strategy**
+
+- Monitor competitor workforce expansion and hiring priorities
+- Analyze industry talent demands and skill gaps
+- Research market entry opportunities in different geographic regions
+
+---
+
+## 🚀 Getting Started
+
+### **Using the Apify Console**
+
+1. **Set your search criteria** — Enter location, keywords, and filters
+2. **Choose job limit** — Set how many jobs to collect (1-100)
+3. **Run the scraper** — Click "Start" and monitor progress
+4. **Download results** — Export in JSON, CSV, or Excel format
+
+### **Using the API**
+
+```
+curl -X POST https://api.apify.com/v2/acts/YOUR_ACTOR_ID/runs \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "location": "New York",
+    "keyword": "data analyst",
+    "country": "US",
+    "experience_level": "Entry level",
+    "max_jobs": 25
+  }'
+```
+
+### **Command Line Testing**
+
+```
+# Quick test
+apify run -p --input-file=test-small.json
+
+# Pagination test
+apify run -p --input-file=test-pagination.json
+
+# Standard test
+apify run -p --input-file=test.json
+```
+
+---
+
+## 🎯 Key Features
+
+✅ **Simple Input** — Just location and optional filters, no complex arrays
+✅ **Smart Pagination** — Automatically handles large job requests
+✅ **Duplicate Prevention** — Built-in job ID tracking prevents duplicates
+✅ **Rich Filters** — All LinkedIn search options supported
+✅ **Structured Output** — Clean, consistent JSON data format
+✅ **Error Handling** — Robust retry mechanisms and detailed logging
+✅ **No Authentication** — Works without LinkedIn login or cookies
+
+Ready to start scraping LinkedIn jobs? Simply enter your search criteria and let the scraper handle the rest! 🎉
